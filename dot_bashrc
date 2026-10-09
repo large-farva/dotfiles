@@ -1,0 +1,77 @@
+if [[ -f /etc/bashrc ]]; then
+    source /etc/bashrc
+fi
+
+for bin in "$HOME/bin" "$HOME/.local/bin"; do
+    case ":$PATH:" in
+        *":$bin:"*) ;;
+        *) PATH="$bin:$PATH" ;;
+    esac
+done
+unset bin
+export PATH
+
+[[ $- == *i* ]] || return
+
+# Fallbacks for other installs.
+if ! command -v brew >/dev/null 2>&1; then
+    for brew_bin in "$HOME/.linuxbrew/bin/brew" /home/linuxbrew/.linuxbrew/bin/brew; do
+        if [[ -x $brew_bin ]]; then
+            eval "$("$brew_bin" shellenv bash)"
+            break
+        fi
+    done
+    unset brew_bin
+fi
+
+HISTSIZE=10000
+HISTFILESIZE=20000
+HISTCONTROL=ignoreboth
+HISTTIMEFORMAT='%F %T '
+shopt -s histappend checkwinsize cmdhist
+
+if command -v micro >/dev/null 2>&1; then
+    export EDITOR=micro
+    export VISUAL=micro
+fi
+
+alias ..='cd ..'
+alias ...='cd ../..'
+alias ll='ls -lh'
+alias la='ls -lah'
+if command -v eza >/dev/null 2>&1; then
+    alias ls='eza --icons=auto --git'
+    alias ll='eza --icons=auto --git -lh'
+    alias la='eza --icons=auto --git -lah'
+    alias lt='eza --icons=auto --tree --level=2'
+fi
+if command -v btop >/dev/null 2>&1; then
+    alias top=btop
+fi
+
+alias ports='ss -tulpn'
+path() {
+    printf '%s\n' "${PATH//:/$'\n'}"
+}
+if command -v rpm-ostree >/dev/null 2>&1; then
+    alias deployments='rpm-ostree status'
+fi
+
+if command -v zoxide >/dev/null 2>&1; then
+    eval "$(zoxide init bash)"
+fi
+
+if [[ ${TERM:-dumb} != dumb ]] &&
+    ! declare -F starship_precmd >/dev/null &&
+    command -v starship >/dev/null 2>&1; then
+    if starship_init=$(starship init bash); then
+        eval "$starship_init"
+
+    fi
+    unset starship_init
+fi
+
+for rc in "$HOME"/.bashrc.d/*; do
+    [[ -f $rc && -r $rc ]] && source "$rc"
+done
+unset rc
