@@ -1,0 +1,37 @@
+[user]
+    useConfigOnly = true
+
+[init]
+    defaultBranch = main
+
+[core]
+    editor = micro
+    excludesFile = ~/.config/git/ignore
+
+[fetch]
+    prune = true
+
+[pull]
+    # Stop on diverged history.
+    # Choose merge or rebase explicitly.
+    ff = only
+
+[push]
+    default = simple
+
+[diff]
+    algorithm = histogram
+    colorMoved = default
+
+[merge]
+    conflictStyle = zdiff3
+
+[alias]
+    st = status --short --branch
+    lg = log --graph --decorate --oneline -20
+    last = log -1 --stat
+    staged = diff --cached
+    unstage = restore --staged
+
+[include]
+    path = ~/.gitconfig.local
