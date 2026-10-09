@@ -1,0 +1,11 @@
+{
+    "autoindent": true,
+    "colorscheme": "default",
+    "eofnewline": true,
+    "hlsearch": true,
+    "rmtrailingws": false,
+    "ruler": true,
+    "syntax": true,
+    "tabsize": 4,
+    "tabstospaces": false
+}
