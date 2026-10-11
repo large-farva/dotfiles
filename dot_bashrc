@@ -37,6 +37,7 @@ fi
 
 alias ..='cd ..'
 alias ...='cd ../..'
+alias c='clear'
 alias ll='ls -lh'
 alias la='ls -lah'
 if command -v eza >/dev/null 2>&1; then
